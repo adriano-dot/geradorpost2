@@ -239,6 +239,17 @@ select.ctrl option{background:var(--g3);}
   .settings-grid{grid-template-columns:1fr;}
   .nav-btn span{display:none;}
 }
+/* ── ADAPTAR ARTE ── */
+.adapt-sec{border:1px solid rgba(255,92,0,.25);border-radius:8px;padding:14px 16px;background:rgba(255,92,0,.04);margin:0 16px 4px;}
+.adapt-sec-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.adapt-sec-lbl svg{width:12px;height:12px;stroke:var(--orange);fill:none;stroke-width:2;flex-shrink:0;}
+.adapt-upload{border:1px dashed rgba(255,92,0,.4);border-radius:4px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;background:rgba(255,92,0,.03);}
+.adapt-upload:hover{border-color:var(--orange);}
+.adapt-upload-txt{font-size:11px;color:var(--muted);line-height:1.5;}
+.adapt-upload-ico{font-size:20px;margin-bottom:5px;color:var(--orange);}
+.btn-adapt{width:100%;margin-top:12px;background:var(--orange);color:#fff;border:none;border-radius:4px;padding:11px;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;}
+.btn-adapt:disabled{opacity:.5;cursor:not-allowed;}
+.btn-adapt svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;}
 /* ── DASHBOARD ── */
 .dash-wrap{padding:28px 32px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:24px;}
 .dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
@@ -428,6 +439,37 @@ select.ctrl option{background:var(--g3);}
         <button class="btn-create" id="btn-create" onclick="generate()">
           <span id="btn-lbl">✦  CRIAR ARTES</span>
           <div class="lbar"></div>
+        </button>
+      </div>
+
+      <!-- ADAPTAR ARTE EXISTENTE -->
+      <div class="adapt-sec">
+        <div class="adapt-sec-lbl">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Adaptar Arte Existente
+        </div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.6;margin-bottom:10px;">
+          Envie uma arte de referência. A IA mantém o conteúdo e modelo, aplicando nossa identidade visual.
+        </div>
+        <input type="file" id="adapt-file-input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="onAdaptImgSelect(event)"/>
+        <div id="adapt-upload-area" class="adapt-upload" onclick="document.getElementById('adapt-file-input').click()">
+          <div id="adapt-placeholder">
+            <div class="adapt-upload-ico">⬆</div>
+            <div class="adapt-upload-txt">Clique para enviar JPG / PNG / WebP</div>
+          </div>
+          <div id="adapt-preview-wrap" style="display:none;">
+            <img id="adapt-preview-thumb" style="width:100%;border-radius:3px;max-height:120px;object-fit:cover;display:block;"/>
+            <div style="font-size:10px;color:var(--orange);margin-top:6px;letter-spacing:1px;">✓ REFERÊNCIA CARREGADA</div>
+          </div>
+        </div>
+        <button class="btn-ghost" id="adapt-clear-btn" onclick="clearAdaptImg(event)" style="display:none;width:100%;margin-top:6px;font-size:11px;">✕ Remover referência</button>
+        <div class="form-grp" style="margin-top:10px;margin-bottom:0;">
+          <label class="form-lbl">Observações (opcional)</label>
+          <textarea class="ctrl" id="adapt-notes" rows="2" placeholder="Ex: manter 3 slides, tom mais direto…"></textarea>
+        </div>
+        <button class="btn-adapt" id="btn-adapt" onclick="adaptArt()">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span id="btn-adapt-lbl">✦ ADAPTAR ARTE</span>
         </button>
       </div>
 
@@ -689,7 +731,8 @@ var G = {
   calMonth: new Date().getMonth(),
   editingPostId: null,
   imgBase64: null, imgDataUrl: null, imgType: null,
-  handle: '', brand: 'Sales Elevator', outputFmt: '1:1', overlayOpacity: 65
+  handle: '', brand: 'Sales Elevator', outputFmt: '1:1', overlayOpacity: 65,
+  adaptImgBase64: null, adaptImgType: null
 };
 
 var COLS = [
@@ -971,6 +1014,102 @@ function clearImg(e){
   document.getElementById('img-placeholder-txt').style.display='block';
   document.getElementById('img-clear-btn').style.display='none';
 }
+function onAdaptImgSelect(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var dataUrl=ev.target.result;
+    G.adaptImgBase64=dataUrl.split(',')[1];
+    G.adaptImgType=file.type||'image/jpeg';
+    document.getElementById('adapt-preview-thumb').src=dataUrl;
+    document.getElementById('adapt-preview-wrap').style.display='block';
+    document.getElementById('adapt-placeholder').style.display='none';
+    document.getElementById('adapt-clear-btn').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function clearAdaptImg(e){
+  if(e)e.stopPropagation();
+  G.adaptImgBase64=null; G.adaptImgType=null;
+  document.getElementById('adapt-file-input').value='';
+  document.getElementById('adapt-preview-wrap').style.display='none';
+  document.getElementById('adapt-placeholder').style.display='block';
+  document.getElementById('adapt-clear-btn').style.display='none';
+}
+
+function buildAdaptPrompt(notes){
+  var dimMap={'1:1':{w:1080,h:1080},'4:5':{w:1080,h:1350},'9:16':{w:1080,h:1920},'16:9':{w:1200,h:630}};
+  var dim=dimMap[G.outputFmt||'1:1']||{w:1080,h:1080};
+  var themeMap={
+    dark:'Fundo #060606. Títulos #FFFFFF. Accent #FF5C00. Secundários #AAAAAA.',
+    orange:'Fundo #FF5C00. Títulos #FFFFFF. Accent #000000. Secundários rgba(255,255,255,0.8).',
+    white:'Fundo #F4F4F0. Títulos #060606. Accent #FF5C00. Secundários #666666.',
+    split:'Fundo #060606 com painel direito 380px background #FF5C00. Títulos #FFFFFF. Accent #FF5C00.'
+  };
+  return 'Você é um designer especialista em posts Instagram B2B.\n\n'
+    +'Analise a arte/post enviado em anexo. Identifique:\n'
+    +'- Número de slides (1 = estático, 2+ = carrossel)\n'
+    +'- Todos os textos: títulos, subtítulos, bullets, CTAs, rodapé\n'
+    +'- Hierarquia visual e estrutura de layout (posições, proporções)\n'
+    +'- Tipo de layout (tipográfico, lista, dado/estatística, diagrama, etc)\n\n'
+    +'TAREFA: Recrie exatamente o mesmo conteúdo e estrutura de layout, substituindo APENAS a identidade visual pelo padrão Sales Elevator abaixo.\n\n'
+    +'IDENTIDADE SALES ELEVATOR:\n'
+    +'Tema: '+themeMap[G.theme]+'\n'
+    +'Fonte display: Bebas Neue. Corpo: Barlow Condensed / Barlow.\n'
+    +'Barra topo 8px accent (#FF5C00). Barra base 4px opacity 0.4.\n'
+    +'"SALES ELEVATOR" topo esquerdo. Rodapé com brand.\n'
+    +(G.handle?'Handle: mostrar "'+G.handle+'" como pílula semitransparente no topo (position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;padding:4px 16px;border-radius:99px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:10).\n':'')
+    +(G.brand?'Barra editorial inferior fixa (position:absolute;bottom:0;left:0;right:0;height:44px;background:rgba(0,0,0,.82);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:5): linha vertical laranja 3px + categoria em uppercase muted + marca "'+G.brand+'" em laranja uppercase bold.\n':'')
+    +'\nDIMENSÃO: cada slide deve ter width:'+dim.w+'px;height:'+dim.h+'px;position:relative;overflow:hidden;\n'
+    +(notes?'\nOBSERVAÇÕES ADICIONAIS: '+notes+'\n':'')
+    +'\nREGRAS TÉCNICAS:\n'
+    +'1. Mantenha TODOS os textos e mensagens originais da arte de referência.\n'
+    +'2. Adapte apenas cores, fontes e elementos de marca.\n'
+    +'3. PROIBIDO template literals (backticks). Apenas HTML+CSS inline.\n'
+    +'4. Zero JavaScript no output.\n'
+    +'5. Fontes: @import url(https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;600&display=swap)\n'
+    +'6. Elementos internos position:absolute dentro de cada slide.\n'
+    +'7. Carrossel: envolva todos os slides em <div style="width:'+dim.w+'px;">\n\n'
+    +'FORMATO DE RESPOSTA — siga exatamente:\n'
+    +'[HTML completo aqui, sem markdown, sem backticks]\n'
+    +'===CAPTION===\n'
+    +'[Legenda pronta para publicar: 4-6 linhas, voz Sales Elevator. Parágrafo de impacto + bullets + CTA. Sem hashtags.]\n'
+    +'===HASHTAGS===\n'
+    +'[28 hashtags relevantes separadas por espaço, mix português e inglês, nicho vendas B2B]';
+}
+
+async function adaptArt(){
+  if(!G.adaptImgBase64){toast('Envie uma arte de referência','err');return;}
+  var btn=document.getElementById('btn-adapt');
+  var lbl=document.getElementById('btn-adapt-lbl');
+  btn.disabled=true; lbl.textContent='ADAPTANDO…';
+  var notes=document.getElementById('adapt-notes').value.trim();
+  var pb=document.getElementById('progress-box');
+  var logEl=document.getElementById('log');
+  pb.classList.add('show'); logEl.innerHTML='';
+  document.getElementById('gal-empty').style.display='none';
+  var row=addLog('Adaptando arte para identidade Sales Elevator…','active');
+  try{
+    var reqBody={prompt:buildAdaptPrompt(notes),imageBase64:G.adaptImgBase64,imageType:G.adaptImgType||'image/jpeg'};
+    var resp=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(reqBody)});
+    var data=await resp.json();
+    if(!resp.ok){setLog(row,'Erro: '+(data.error||resp.status),'fail');return;}
+    var raw=(data.html||'').replace(/^```html\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    if(!raw){setLog(row,'Resposta vazia','fail');return;}
+    var parts=raw.split('===CAPTION===');
+    var htmlPart=parts[0].trim();
+    var caption='', hashtags='';
+    if(parts[1]){var sub=parts[1].split('===HASHTAGS===');caption=sub[0].trim();if(sub[1])hashtags=sub[1].trim();}
+    var art={id:uid(),title:'Adaptada — '+(new Date().toLocaleDateString('pt-BR')),theme:G.theme,fmt:G.fmt,outputFmt:G.outputFmt||'1:1',html:htmlPart,caption:caption,hashtags:hashtags,createdAt:new Date().toISOString()};
+    renderCard(art,false);
+    setLog(row,'Arte adaptada com sucesso!','done');
+    toast('Arte adaptada!','ok');
+    clearAdaptImg(null);
+    document.getElementById('adapt-notes').value='';
+  }catch(err){setLog(row,'Erro: '+err.message,'fail');toast('Erro ao adaptar','err');}
+  btn.disabled=false; lbl.textContent='✦ ADAPTAR ARTE';
+}
+
 function updOverlay(v){
   G.overlayOpacity=parseInt(v);
   document.getElementById('overlay-val').textContent=v+'%';
