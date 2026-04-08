@@ -1067,7 +1067,7 @@ function buildAdaptPrompt(notes){
     +'2. Adapte apenas cores, fontes e elementos de marca.\n'
     +'3. PROIBIDO template literals (backticks). Apenas HTML+CSS inline.\n'
     +'4. Zero JavaScript no output.\n'
-    +'5. Fontes: @import url(https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;600&display=swap)\n'
+    +'5. Fontes Bebas Neue, Barlow Condensed e Barlow já estão carregadas globalmente. NÃO inclua @import, <link> ou <style> de fontes no output. Use-as diretamente via font-family.\n'
     +'6. Elementos internos position:absolute dentro de cada slide.\n'
     +'7. Carrossel: envolva todos os slides em <div style="width:'+dim.w+'px;">\n\n'
     +'FORMATO DE RESPOSTA — siga exatamente:\n'
@@ -1097,7 +1097,7 @@ async function adaptArt(){
     var raw=(data.html||'').replace(/^```html\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
     if(!raw){setLog(row,'Resposta vazia','fail');return;}
     var parts=raw.split('===CAPTION===');
-    var htmlPart=parts[0].trim();
+    var htmlPart=cleanHtml(parts[0]);
     var caption='', hashtags='';
     if(parts[1]){var sub=parts[1].split('===HASHTAGS===');caption=sub[0].trim();if(sub[1])hashtags=sub[1].trim();}
     var art={id:uid(),title:'Adaptada — '+(new Date().toLocaleDateString('pt-BR')),theme:G.theme,fmt:G.fmt,outputFmt:G.outputFmt||'1:1',html:htmlPart,caption:caption,hashtags:hashtags,createdAt:new Date().toISOString()};
@@ -1108,6 +1108,17 @@ async function adaptArt(){
     document.getElementById('adapt-notes').value='';
   }catch(err){setLog(row,'Erro: '+err.message,'fail');toast('Erro ao adaptar','err');}
   btn.disabled=false; lbl.textContent='✦ ADAPTAR ARTE';
+}
+
+// Remove font imports/links that the AI occasionally leaks as visible text
+function cleanHtml(html){
+  // Remove @import lines (loose text or inside style tags)
+  html = html.replace(/@import\s+url\s*\([^)]*googleapis[^)]*\)\s*;?\s*/gi, '');
+  // Remove <link> tags pointing to Google Fonts
+  html = html.replace(/<link[^>]+googleapis\.com[^>]*\/?>/gi, '');
+  // Remove <style> blocks that ONLY contain whitespace / font imports (now empty after strip above)
+  html = html.replace(/<style>\s*<\/style>/gi, '');
+  return html.trim();
 }
 
 function updOverlay(v){
@@ -1165,7 +1176,7 @@ function buildPrompt(tema,pub,det,idx,total){
     +'REGRAS:\n1. Cada slide: width:'+dim.w+'px;height:'+dim.h+'px;position:relative;overflow:hidden;\n'
     +'2. PROIBIDO template literals (backticks). Apenas HTML+CSS.\n'
     +'3. Zero JavaScript no output.\n'
-    +'4. Fontes: @import url(https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;600&display=swap)\n'
+    +'4. Fontes Bebas Neue, Barlow Condensed e Barlow já estão carregadas globalmente. NÃO inclua @import, <link> ou <style> de fontes no output. Use-as diretamente via font-family.\n'
     +'5. Elementos internos position:absolute dentro de cada slide.\n'
     +'6. Copy direto, provocativo, voz Sales Elevator.\n'+(G.handle?'9. Handle dos autores: mostrar G.handle como pilula semitransparente centralizada no topo do canvas (position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;padding:4px 16px;border-radius:99px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:10;white-space:nowrap;pointer-events:none). Valor do handle: '+G.handle+'.\n':'')+(G.brand?'10. Barra editorial inferior fixa (position:absolute;bottom:0;left:0;right:0;height:44px;background:rgba(0,0,0,.82);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:5): primeiro elemento linha vertical laranja (display:inline-block;width:3px;height:22px;background:#FF5C00;border-radius:2px;flex-shrink:0), segundo elemento span flex:1 categoria/tema (font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#999), terceiro elemento marca '+G.brand+' (font-size:10px;font-weight:700;letter-spacing:2px;color:#FF5C00;text-transform:uppercase).\n':'')
     +'7. CTA claro no último slide.\n'
@@ -1211,7 +1222,7 @@ async function generate(){
       if(!raw){setLog(row,'Arte '+i+' — resposta vazia','fail');continue;}
       var capIdx=raw.indexOf('===CAPTION===');
       var tagIdx=raw.indexOf('===HASHTAGS===');
-      var htmlPart=capIdx>-1?raw.substring(0,capIdx).trim():raw;
+      var htmlPart=cleanHtml(capIdx>-1?raw.substring(0,capIdx):raw);
       if(G.imgDataUrl) htmlPart=htmlPart.split('__IMG__').join(G.imgDataUrl);
       var captionPart='';
       var hashtagsPart='';
