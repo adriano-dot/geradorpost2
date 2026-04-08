@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "se-app-v2/api/*.js", "use": "@vercel/node" },
+    { "src": "se-app-v2/public/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/generate", "dest": "/se-app-v2/api/generate.js" },
+    { "src": "/api/notify",   "dest": "/se-app-v2/api/notify.js"   },
+    { "src": "/(.*)",         "dest": "/se-app-v2/public/$1"        }
+  ]
+}
