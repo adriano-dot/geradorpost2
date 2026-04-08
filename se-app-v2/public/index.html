@@ -239,6 +239,27 @@ select.ctrl option{background:var(--g3);}
   .settings-grid{grid-template-columns:1fr;}
   .nav-btn span{display:none;}
 }
+/* ── CANAL ── */
+.canal-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.canal-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:3px;font-size:10px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;cursor:pointer;border:1px solid var(--g4);color:var(--muted);background:transparent;transition:all .2s;white-space:nowrap;}
+.canal-chip .canal-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.canal-chip.active{border-color:currentColor;background:rgba(255,255,255,.06);}
+.canal-chip[data-net="instagram"].active{color:#E1306C;border-color:#E1306C;}
+.canal-chip[data-net="linkedin"].active{color:#0A66C2;border-color:#0A66C2;}
+.canal-chip[data-net="facebook"].active{color:#1877F2;border-color:#1877F2;}
+.canal-chip[data-net="tiktok"].active{color:#69C9D0;border-color:#69C9D0;}
+.canal-chip[data-net="youtube"].active{color:#FF0000;border-color:#FF0000;}
+.canal-chip[data-net="custom"].active{color:var(--orange);border-color:var(--orange);}
+.canal-chip-add{background:none;border:1px dashed var(--g4);color:var(--muted);border-radius:3px;padding:5px 10px;font-size:11px;font-family:'Barlow Condensed',sans-serif;cursor:pointer;letter-spacing:1px;transition:all .2s;}
+.canal-chip-add:hover{border-color:var(--orange);color:var(--orange);}
+/* ── INSPIRAÇÃO ── */
+.inspi-upload{border:1px dashed var(--g4);border-radius:4px;padding:10px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s;}
+.inspi-upload:hover{border-color:var(--orange);}
+.inspi-thumb-wrap{width:48px;height:48px;border-radius:3px;background:var(--g3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;}
+.inspi-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.inspi-info{flex:1;min-width:0;}
+.inspi-info-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.inspi-info-sub{font-size:11px;color:var(--muted);}
 /* ── ADAPTAR ARTE ── */
 .adapt-sec{border:1px solid rgba(255,92,0,.25);border-radius:8px;padding:14px 16px;background:rgba(255,92,0,.04);margin:0 16px 4px;}
 .adapt-sec-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
@@ -357,6 +378,7 @@ select.ctrl option{background:var(--g3);}
           <div class="chip"        data-v="provocativo" onclick="selChip(this,'grp-layout')">Provocativo</div>
           <div class="chip"        data-v="educativo"   onclick="selChip(this,'grp-layout')">Educativo</div>
           <div class="chip"        data-v="fotobg"      onclick="selChip(this,'grp-layout')">Foto + Texto</div>
+          <div class="chip"        data-v="motivacional" onclick="selChip(this,'grp-layout')">Motivacional</div>
         </div>
       </div>
 
@@ -393,6 +415,42 @@ select.ctrl option{background:var(--g3);}
           <label class="form-lbl">Marca</label>
           <input class="ctrl" id="in-brand" type="text" placeholder="Sales Elevator" value="Sales Elevator" oninput="G.brand=this.value"/>
         </div>
+      </div>
+
+      <div class="gen-sec">
+        <div class="gen-sec-lbl">Canal de Destino</div>
+        <div class="canal-chips" id="canal-chips">
+          <button class="canal-chip" data-net="instagram" onclick="selCanal(this)">
+            <span class="canal-dot" style="background:#E1306C;"></span>Instagram
+          </button>
+          <button class="canal-chip" data-net="linkedin" onclick="selCanal(this)">
+            <span class="canal-dot" style="background:#0A66C2;"></span>LinkedIn
+          </button>
+          <button class="canal-chip" data-net="facebook" onclick="selCanal(this)">
+            <span class="canal-dot" style="background:#1877F2;"></span>Facebook
+          </button>
+          <button class="canal-chip" data-net="tiktok" onclick="selCanal(this)">
+            <span class="canal-dot" style="background:#69C9D0;"></span>TikTok
+          </button>
+          <button class="canal-chip" data-net="youtube" onclick="selCanal(this)">
+            <span class="canal-dot" style="background:#FF0000;"></span>YouTube
+          </button>
+        </div>
+        <button class="canal-chip-add" id="btn-add-canal" onclick="addCustomCanal()" style="margin-top:6px;">+ Adicionar canal</button>
+        <div id="custom-canals-wrap" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+      </div>
+
+      <div class="gen-sec">
+        <div class="gen-sec-lbl">Arte de Inspiração</div>
+        <input type="file" id="inspi-file-input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="onInspiImgSelect(event)"/>
+        <div class="inspi-upload" id="inspi-upload-area" onclick="document.getElementById('inspi-file-input').click()">
+          <div class="inspi-thumb-wrap" id="inspi-thumb">🖼</div>
+          <div class="inspi-info">
+            <div class="inspi-info-lbl">Referência visual</div>
+            <div class="inspi-info-sub" id="inspi-sub">Clique para anexar uma arte como inspiração de estilo ou layout</div>
+          </div>
+        </div>
+        <button class="btn-ghost" id="inspi-clear-btn" onclick="clearInspiImg(event)" style="display:none;width:100%;margin-top:6px;font-size:11px;">✕ Remover inspiração</button>
       </div>
 
       <div class="gen-sec">
@@ -610,6 +668,32 @@ select.ctrl option{background:var(--g3);}
         </div>
       </div>
 
+      <div class="settings-card" style="grid-column:1/-1;">
+        <div class="settings-card-title">⚡ OTIMIZAÇÃO DE PROMPTS</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;">
+          Escreva instruções personalizadas que serão aplicadas em <strong style="color:var(--text);">todas as gerações</strong>.
+          Use para definir tom de voz, palavras proibidas, estilos específicos ou qualquer diretriz da marca.
+        </div>
+        <div class="form-grp">
+          <label class="form-lbl">Instruções adicionais de prompt</label>
+          <textarea class="ctrl" id="cfg-prompt-extra" rows="6"
+            placeholder="Ex: Nunca use a palavra 'solução'. Tom sempre direto e provocativo. Prefira frases curtas com no máximo 8 palavras por linha. Use sempre dados concretos e percentuais quando possível. Nosso público odeia floreios — seja cirúrgico."></textarea>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+          <button class="btn-ghost" onclick="saveCfg('prompt-extra')" style="flex:1;">Salvar instruções</button>
+          <div class="save-badge" id="badge-prompt-extra" style="margin:0;">✓ Salvo</div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:rgba(255,92,0,.06);border-radius:4px;border:1px solid rgba(255,92,0,.2);">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;">Como usar</div>
+          <div style="font-size:11px;color:#888;line-height:1.7;">
+            • <strong style="color:#aaa;">Tom e voz:</strong> "Sempre use imperativo. Tom agressivo e direto."<br>
+            • <strong style="color:#aaa;">Proibições:</strong> "Nunca use as palavras: solução, jornada, transformação."<br>
+            • <strong style="color:#aaa;">Estrutura:</strong> "Sempre termine com uma pergunta retórica provocativa."<br>
+            • <strong style="color:#aaa;">Marca:</strong> "Mencione 'Sales Elevator' apenas no rodapé, nunca no corpo."
+          </div>
+        </div>
+      </div>
+
       <div class="settings-card">
         <div class="settings-card-title">DADOS LOCAIS</div>
         <div style="font-size:13px;color:var(--text);margin-bottom:16px;line-height:1.7;">
@@ -732,7 +816,11 @@ var G = {
   editingPostId: null,
   imgBase64: null, imgDataUrl: null, imgType: null,
   handle: '', brand: 'Sales Elevator', outputFmt: '1:1', overlayOpacity: 65,
-  adaptImgBase64: null, adaptImgType: null
+  adaptImgBase64: null, adaptImgType: null,
+  canal: null,
+  customCanals: [],
+  inspiImgBase64: null, inspiImgType: null,
+  promptExtra: ''
 };
 
 var COLS = [
@@ -760,13 +848,78 @@ function loadStorage(){
     if(a) G.arts = JSON.parse(a);
     var p = localStorage.getItem('se_posts_v1');
     if(p) G.posts = JSON.parse(p);
+    var cc = localStorage.getItem('se_custom_canals');
+    if(cc) G.customCanals = JSON.parse(cc);
+    var pe = localStorage.getItem('se_prompt_extra');
+    if(pe) G.promptExtra = pe;
   }catch(e){}
   G.arts.forEach(function(art){ renderCard(art,true); });
   updateGalMeta();
+  renderCustomCanals();
 }
 
 function saveArts(){ try{ localStorage.setItem('se_arts_v3', JSON.stringify(G.arts.slice(-30))); }catch(e){} }
 function savePosts(){ try{ localStorage.setItem('se_posts_v1', JSON.stringify(G.posts)); }catch(e){} }
+
+// ── CANAL ──────────────────────────────────────────────────────────────────────
+function selCanal(btn){
+  var net = btn.dataset.net;
+  if(G.canal === net){ G.canal=null; btn.classList.remove('active'); return; }
+  document.querySelectorAll('.canal-chip').forEach(function(b){b.classList.remove('active');});
+  G.canal = net;
+  btn.classList.add('active');
+}
+function addCustomCanal(){
+  var name = prompt('Nome do canal personalizado (ex: WhatsApp, Newsletter, Blog):');
+  if(!name || !name.trim()) return;
+  name = name.trim();
+  G.customCanals.push(name);
+  localStorage.setItem('se_custom_canals', JSON.stringify(G.customCanals));
+  renderCustomCanals();
+}
+function renderCustomCanals(){
+  var wrap = document.getElementById('custom-canals-wrap');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  G.customCanals.forEach(function(name, idx){
+    var btn = document.createElement('button');
+    btn.className = 'canal-chip'; btn.dataset.net='custom';
+    btn.innerHTML = '<span class="canal-dot" style="background:var(--orange);"></span>'+escHtml(name)
+      +'<span onclick="removeCustomCanal(event,'+idx+')" style="margin-left:4px;opacity:.5;font-size:10px;">✕</span>';
+    btn.onclick = function(){ selCanal(btn); G.canal = name; };
+    wrap.appendChild(btn);
+  });
+}
+function removeCustomCanal(e, idx){
+  e.stopPropagation();
+  G.customCanals.splice(idx,1);
+  localStorage.setItem('se_custom_canals', JSON.stringify(G.customCanals));
+  renderCustomCanals();
+}
+
+// ── INSPIRAÇÃO ─────────────────────────────────────────────────────────────────
+function onInspiImgSelect(e){
+  var file = e.target.files[0]; if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var dataUrl = ev.target.result;
+    G.inspiImgBase64 = dataUrl.split(',')[1];
+    G.inspiImgType = file.type||'image/jpeg';
+    var thumb = document.getElementById('inspi-thumb');
+    thumb.innerHTML = '<img src="'+dataUrl+'"/>';
+    document.getElementById('inspi-sub').textContent = file.name;
+    document.getElementById('inspi-clear-btn').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function clearInspiImg(e){
+  if(e) e.stopPropagation();
+  G.inspiImgBase64 = null; G.inspiImgType = null;
+  document.getElementById('inspi-file-input').value='';
+  document.getElementById('inspi-thumb').innerHTML='🖼';
+  document.getElementById('inspi-sub').textContent='Clique para anexar uma arte como inspiração de estilo ou layout';
+  document.getElementById('inspi-clear-btn').style.display='none';
+}
 
 // ── API STATUS ─────────────────────────────────────────────────────────────────
 function checkApi(){
@@ -1062,6 +1215,7 @@ function buildAdaptPrompt(notes){
     +(G.brand?'Barra editorial inferior fixa (position:absolute;bottom:0;left:0;right:0;height:44px;background:rgba(0,0,0,.82);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:5): linha vertical laranja 3px + categoria em uppercase muted + marca "'+G.brand+'" em laranja uppercase bold.\n':'')
     +'\nDIMENSÃO: cada slide deve ter width:'+dim.w+'px;height:'+dim.h+'px;position:relative;overflow:hidden;\n'
     +(notes?'\nOBSERVAÇÕES ADICIONAIS: '+notes+'\n':'')
+    +(G.promptExtra?'\nINSTRUÇÕES ADICIONAIS DA MARCA (PRIORIDADE ALTA):\n'+G.promptExtra+'\n':'')
     +'\nREGRAS TÉCNICAS:\n'
     +'1. Mantenha TODOS os textos e mensagens originais da arte de referência.\n'
     +'2. Adapte apenas cores, fontes e elementos de marca.\n'
@@ -1162,7 +1316,8 @@ function buildPrompt(tema,pub,det,idx,total){
     dado:'Estatística central enorme (ex: 3×, 87%). Contexto acima. Interpretação abaixo.',
     provocativo:'Frase de impacto 65% do slide. Contraste extremo. Tipografia É o design.',
     educativo:'Layout didático passo a passo. Título principal + 3 a 5 etapas numeradas (número grande laranja + texto explicativo curto). Espaço generoso entre itens. Ícone ou símbolo simples por etapa. Rodapé com CTA suave.',
-    fotobg:'A IMAGEM ENVIADA é o fundo completo do post. Use <img src="__IMG__" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;"> como primeira tag dentro do slide. Adicione overlay <div style="position:absolute;inset:0;background:rgba(0,0,0,'+(G.overlayOpacity/100).toFixed(2)+');z-index:1;"></div>. Todos os textos ficam acima (z-index>=2). Tipografia grande e bold para contraste máximo.'
+    fotobg:'A IMAGEM ENVIADA é o fundo completo do post. Use <img src="__IMG__" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;"> como primeira tag dentro do slide. Adicione overlay <div style="position:absolute;inset:0;background:rgba(0,0,0,'+(G.overlayOpacity/100).toFixed(2)+');z-index:1;"></div>. Todos os textos ficam acima (z-index>=2). Tipografia grande e bold para contraste máximo.',
+    motivacional:'Layout motivacional de alto impacto estilo citação. Aspas decorativas gigantes (posição:absolute top:20px left:24px, font-size:120px, color:#FF5C00, opacity:0.85, font-family:Georgia,serif, line-height:0.8, z-index:0). Fundo muito escuro #080808. Texto principal centralizado vertical e horizontalmente: font-family Barlow Condensed, font-size entre 52px e 72px, line-height:1.15, color:#FFFFFF, mix de font-weight:300 e font-weight:800 — palavras comuns em 300, palavras-chave em 800. Máx 6 palavras por linha. 1-3 palavras-chave com highlight colorido: span style="background:#FF5C00;color:#060606;padding:2px 8px;border-radius:2px;font-weight:800". Rodapé: "LEIA NA LEGENDA" muted uppercase 9px centralizado + handle. Zero elementos decorativos extras. Tipografia É o design.'
   };
   return 'Você é designer especialista em posts 1080x1080 Instagram B2B.\n\n'
     +'Gere HTML de um '+fmtMap[G.fmt]+' para marca Sales Elevator.\n\n'
@@ -1187,7 +1342,10 @@ function buildPrompt(tema,pub,det,idx,total){
     +'[Legenda pronta para publicar: 4-6 linhas, voz Sales Elevator — direto, provocativo, B2B.'
     +' Parágrafo de impacto + bullets curtos + CTA forte. Sem hashtags aqui.]\n'
     +'===HASHTAGS===\n'
-    +'[28 hashtags relevantes separadas por espaco, mix portugues e ingles, do nicho vendas B2B]';
+    +'[28 hashtags relevantes separadas por espaco, mix portugues e ingles, do nicho vendas B2B]'
+    +(G.canal?'\n\nCANAL DE DESTINO: '+G.canal+'. Adapte o copy e CTA para o comportamento e linguagem típica deste canal.':'')
+    +(G.inspiImgBase64?'\n\nARTE DE INSPIRAÇÃO ANEXADA: use-a como referência de composição e estilo visual (ritmo, hierarquia, proporções). Mantenha nossa identidade Sales Elevator.':'')
+    +(G.promptExtra?'\n\nINSTRUÇÕES ADICIONAIS DA MARCA (PRIORIDADE ALTA — siga à risca):\n'+G.promptExtra:'');
 }
 
 // ── GENERATE ──────────────────────────────────────────────────────────────────
@@ -1211,6 +1369,7 @@ async function generate(){
     try{
       var reqBody={prompt:buildPrompt(tema,pub,det,i,G.qty)};
       if(G.imgBase64){reqBody.imageBase64=G.imgBase64;reqBody.imageType=G.imgType||'image/jpeg';}
+      else if(G.inspiImgBase64){reqBody.imageBase64=G.inspiImgBase64;reqBody.imageType=G.inspiImgType||'image/jpeg';}
       var resp=await fetch('/api/generate',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -1795,8 +1954,18 @@ if(typeof Notification!=='undefined'&&Notification.permission==='default'){
 function loadCfgFields(){
   var email=localStorage.getItem('se_cfg_email')||'';
   if(email) document.getElementById('cfg-email').value=email;
+  var pe=localStorage.getItem('se_prompt_extra')||'';
+  if(pe){ document.getElementById('cfg-prompt-extra').value=pe; G.promptExtra=pe; }
 }
 function saveCfg(key){
+  if(key==='prompt-extra'){
+    var val=document.getElementById('cfg-prompt-extra').value;
+    G.promptExtra=val;
+    localStorage.setItem('se_prompt_extra',val);
+    var badge=document.getElementById('badge-prompt-extra');
+    badge.classList.add('show'); setTimeout(function(){badge.classList.remove('show');},2500);
+    toast('Instruções salvas!','ok'); return;
+  }
   var val=document.getElementById('cfg-'+key).value.trim();
   if(!val){toast('Campo vazio','err');return;}
   localStorage.setItem('se_cfg_'+key,val);
