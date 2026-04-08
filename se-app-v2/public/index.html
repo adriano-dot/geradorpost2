@@ -239,6 +239,24 @@ select.ctrl option{background:var(--g3);}
   .settings-grid{grid-template-columns:1fr;}
   .nav-btn span{display:none;}
 }
+/* ── FORMATO & DIMENSÃO ── */
+.fmt-section{display:flex;flex-direction:column;gap:12px;}
+.fmt-group-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.fmt-group-lbl .net-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fmt-cards{display:flex;flex-direction:column;gap:3px;}
+.fmt-card{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:4px;border:1px solid var(--g4);cursor:pointer;transition:all .2s;background:transparent;width:100%;text-align:left;}
+.fmt-card:hover{background:var(--g3);}
+.fmt-card.active{border-color:var(--orange);background:rgba(255,92,0,.08);}
+.fmt-preview{width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fmt-preview-box{background:var(--g4);border-radius:1px;transition:background .2s;}
+.fmt-card.active .fmt-preview-box{background:var(--orange);opacity:.6;}
+.fmt-info{flex:1;min-width:0;}
+.fmt-name{font-size:11px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.5px;}
+.fmt-dims{font-size:9px;color:var(--muted);letter-spacing:.5px;margin-top:1px;}
+.fmt-badge{font-size:8px;padding:2px 6px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.fmt-badge.rec{background:rgba(46,204,113,.15);color:#2ECC71;}
+.fmt-badge.warn{background:rgba(231,76,60,.12);color:#E74C3C;}
+.fmt-badge.neutral{background:rgba(255,255,255,.06);color:var(--muted);}
 /* ── CANAL ── */
 .canal-chips{display:flex;flex-wrap:wrap;gap:6px;}
 .canal-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:3px;font-size:10px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;cursor:pointer;border:1px solid var(--g4);color:var(--muted);background:transparent;transition:all .2s;white-space:nowrap;}
@@ -454,12 +472,96 @@ select.ctrl option{background:var(--g3);}
       </div>
 
       <div class="gen-sec">
-        <div class="gen-sec-lbl">Dimensão</div>
-        <div class="chips" id="grp-outfmt">
-          <div class="chip active" data-v="1:1"  data-w="1080" data-h="1080" onclick="selChip(this,'grp-outfmt')">1:1</div>
-          <div class="chip"        data-v="4:5"  data-w="1080" data-h="1350" onclick="selChip(this,'grp-outfmt')">4:5</div>
-          <div class="chip"        data-v="9:16" data-w="1080" data-h="1920" onclick="selChip(this,'grp-outfmt')">9:16</div>
-          <div class="chip"        data-v="16:9" data-w="1200" data-h="630"  onclick="selChip(this,'grp-outfmt')">16:9</div>
+        <div class="gen-sec-lbl">Formato & Dimensão</div>
+        <div class="fmt-section" id="fmt-section">
+
+          <!-- Instagram / Facebook -->
+          <div class="fmt-group">
+            <div class="fmt-group-lbl">
+              <span class="net-dot" style="background:#E1306C;"></span>Instagram &amp; Facebook
+            </div>
+            <div class="fmt-cards">
+              <button class="fmt-card active" data-v="ig-feed-45" data-w="1080" data-h="1350" data-ratio="4:5" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:17px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed</div><div class="fmt-dims">1080 × 1350 · 4:5</div></div>
+                <span class="fmt-badge rec">★ Mais alcance</span>
+              </button>
+              <button class="fmt-card" data-v="ig-feed-11" data-w="1080" data-h="1080" data-ratio="1:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:20px;height:20px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed Quadrado</div><div class="fmt-dims">1080 × 1080 · 1:1</div></div>
+                <span class="fmt-badge neutral">Clássico</span>
+              </button>
+              <button class="fmt-card" data-v="ig-stories" data-w="1080" data-h="1920" data-ratio="9:16" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:12px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Stories / Reels</div><div class="fmt-dims">1080 × 1920 · 9:16</div></div>
+                <span class="fmt-badge neutral">Full screen</span>
+              </button>
+              <button class="fmt-card" data-v="ig-horizontal" data-w="1080" data-h="566" data-ratio="1.91:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:22px;height:11px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed Horizontal</div><div class="fmt-dims">1080 × 566 · 1.91:1</div></div>
+                <span class="fmt-badge warn">↓ Alcance menor</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- LinkedIn -->
+          <div class="fmt-group">
+            <div class="fmt-group-lbl">
+              <span class="net-dot" style="background:#0A66C2;"></span>LinkedIn
+            </div>
+            <div class="fmt-cards">
+              <button class="fmt-card" data-v="li-feed-45" data-w="1200" data-h="1500" data-ratio="4:5" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:17px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed</div><div class="fmt-dims">1200 × 1500 · 4:5</div></div>
+                <span class="fmt-badge rec">★ Recomendado</span>
+              </button>
+              <button class="fmt-card" data-v="li-feed-11" data-w="1200" data-h="1200" data-ratio="1:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:20px;height:20px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed Quadrado</div><div class="fmt-dims">1200 × 1200 · 1:1</div></div>
+                <span class="fmt-badge neutral">LI</span>
+              </button>
+              <button class="fmt-card" data-v="li-horizontal" data-w="1200" data-h="627" data-ratio="1.91:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:22px;height:11px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed Horizontal</div><div class="fmt-dims">1200 × 627 · 1.91:1</div></div>
+                <span class="fmt-badge neutral">LI</span>
+              </button>
+              <button class="fmt-card" data-v="li-video" data-w="1080" data-h="1920" data-ratio="9:16" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:12px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Vídeo Vertical</div><div class="fmt-dims">1080 × 1920 · 9:16</div></div>
+                <span class="fmt-badge rec">↑ Alta performance</span>
+              </button>
+              <button class="fmt-card" data-v="li-banner-p" data-w="1584" data-h="396" data-ratio="4:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:24px;height:6px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Banner Perfil Pessoal</div><div class="fmt-dims">1584 × 396 · 4:1</div></div>
+                <span class="fmt-badge neutral">Capa</span>
+              </button>
+              <button class="fmt-card" data-v="li-banner-e" data-w="1128" data-h="191" data-ratio="5.9:1" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:24px;height:4px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Banner Empresa</div><div class="fmt-dims">1128 × 191 · 5.9:1</div></div>
+                <span class="fmt-badge neutral">Capa</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Universal -->
+          <div class="fmt-group">
+            <div class="fmt-group-lbl">
+              <span class="net-dot" style="background:var(--orange);"></span>Setup Universal (Recomendado)
+            </div>
+            <div class="fmt-cards">
+              <button class="fmt-card" data-v="univ-feed" data-w="1080" data-h="1350" data-ratio="4:5" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:17px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Feed Universal</div><div class="fmt-dims">1080 × 1350 · 4:5 — funciona em tudo</div></div>
+                <span class="fmt-badge rec">✅ V4-style</span>
+              </button>
+              <button class="fmt-card" data-v="univ-video" data-w="1080" data-h="1920" data-ratio="9:16" onclick="selFmt(this)">
+                <div class="fmt-preview"><div class="fmt-preview-box" style="width:12px;height:22px;"></div></div>
+                <div class="fmt-info"><div class="fmt-name">Vídeo Universal</div><div class="fmt-dims">1080 × 1920 · 9:16 — funciona em tudo</div></div>
+                <span class="fmt-badge rec">✅ V4-style</span>
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -815,7 +917,7 @@ var G = {
   calMonth: new Date().getMonth(),
   editingPostId: null,
   imgBase64: null, imgDataUrl: null, imgType: null,
-  handle: '', brand: 'Sales Elevator', outputFmt: '1:1', overlayOpacity: 65,
+  handle: '', brand: 'Sales Elevator', outputFmt: 'ig-feed-45', outputRatio: '4:5', outputW: 1080, outputH: 1350, overlayOpacity: 65,
   adaptImgBase64: null, adaptImgType: null,
   canal: null,
   customCanals: [],
@@ -1116,17 +1218,29 @@ function selChip(el,grp){
   }
   if(grp==='grp-outfmt'){
     G.outputFmt=el.dataset.v;
-    var ratioMap={'1:1':'','4:5':'ratio-4-5','9:16':'ratio-9-16','16:9':'ratio-16-9'};
-    var rc=ratioMap[G.outputFmt]||'';
-    document.querySelectorAll('.art-preview').forEach(function(p){
-      p.classList.remove('ratio-4-5','ratio-9-16','ratio-16-9');
-      if(rc)p.classList.add(rc);
-      var pw=p.offsetWidth,ph=p.offsetHeight;
-      var inner=p.querySelector('.art-preview-inner');
-      var canvas=el.dataset.w?Number(el.dataset.w):1080;
-      if(inner&&pw>0)inner.style.transform='scale('+(pw/canvas)+')';
-    });
+    G.outputW=Number(el.dataset.w)||1080;
+    G.outputH=Number(el.dataset.h)||1080;
+    G.outputRatio=el.dataset.ratio||'1:1';
   }
+}
+
+// ── FORMATO SELECTOR ──────────────────────────────────────────────────────────
+function selFmt(el){
+  document.querySelectorAll('.fmt-card').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');
+  G.outputFmt  = el.dataset.v;
+  G.outputW    = Number(el.dataset.w)||1080;
+  G.outputH    = Number(el.dataset.h)||1080;
+  G.outputRatio= el.dataset.ratio||'1:1';
+  // update existing card previews scale
+  var ratioClass={'4:5':'ratio-4-5','9:16':'ratio-9-16','1.91:1':'','4:1':'','5.9:1':'','1:1':''}[G.outputRatio]||'';
+  document.querySelectorAll('.art-preview').forEach(function(p){
+    p.classList.remove('ratio-4-5','ratio-9-16','ratio-16-9');
+    if(ratioClass)p.classList.add(ratioClass);
+    var inner=p.querySelector('.art-preview-inner');
+    var pw=p.offsetWidth;
+    if(inner&&pw>0)inner.style.transform='scale('+(pw/G.outputW)+')';
+  });
 }
 
 function onImgSelect(e){
@@ -1191,8 +1305,7 @@ function clearAdaptImg(e){
 }
 
 function buildAdaptPrompt(notes){
-  var dimMap={'1:1':{w:1080,h:1080},'4:5':{w:1080,h:1350},'9:16':{w:1080,h:1920},'16:9':{w:1200,h:630}};
-  var dim=dimMap[G.outputFmt||'1:1']||{w:1080,h:1080};
+  var dim={w:G.outputW||1080, h:G.outputH||1350};
   var themeMap={
     dark:'Fundo #060606. Títulos #FFFFFF. Accent #FF5C00. Secundários #AAAAAA.',
     orange:'Fundo #FF5C00. Títulos #FFFFFF. Accent #000000. Secundários rgba(255,255,255,0.8).',
@@ -1254,7 +1367,7 @@ async function adaptArt(){
     var htmlPart=cleanHtml(parts[0]);
     var caption='', hashtags='';
     if(parts[1]){var sub=parts[1].split('===HASHTAGS===');caption=sub[0].trim();if(sub[1])hashtags=sub[1].trim();}
-    var art={id:uid(),title:'Adaptada — '+(new Date().toLocaleDateString('pt-BR')),theme:G.theme,fmt:G.fmt,outputFmt:G.outputFmt||'1:1',html:htmlPart,caption:caption,hashtags:hashtags,createdAt:new Date().toISOString()};
+    var art={id:uid(),title:'Adaptada — '+(new Date().toLocaleDateString('pt-BR')),theme:G.theme,fmt:G.fmt,outputFmt:G.outputFmt,outputW:G.outputW||1080,outputH:G.outputH||1350,html:htmlPart,caption:caption,hashtags:hashtags,createdAt:new Date().toISOString()};
     renderCard(art,false);
     setLog(row,'Arte adaptada com sucesso!','done');
     toast('Arte adaptada!','ok');
@@ -1295,8 +1408,7 @@ function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
 // ── PROMPT ────────────────────────────────────────────────────────────────────
 function buildPrompt(tema,pub,det,idx,total){
-  var dimMap={'1:1':{w:1080,h:1080},'4:5':{w:1080,h:1350},'9:16':{w:1080,h:1920},'16:9':{w:1200,h:630}};
-  var dim=dimMap[G.outputFmt||'1:1']||{w:1080,h:1080};
+  var dim={w:G.outputW||1080, h:G.outputH||1350};
   var fmtMap={
     estatico:'post estático único — 1 div '+dim.w+'x'+dim.h,
     carrossel3:'carrossel 3 slides — 3 divs '+dim.w+'x'+dim.h+' empilhadas verticalmente',
@@ -1395,7 +1507,7 @@ async function generate(){
           captionPart=afterCap.trim();
         }
       }
-      var art={id:uid(),title:tema,theme:G.theme,fmt:G.fmt,layout:G.layout,outputFmt:G.outputFmt,html:htmlPart,caption:captionPart,hashtags:hashtagsPart,ts:new Date().toLocaleString('pt-BR')};
+      var art={id:uid(),title:tema,theme:G.theme,fmt:G.fmt,layout:G.layout,outputFmt:G.outputFmt,outputW:G.outputW||1080,outputH:G.outputH||1350,html:htmlPart,caption:captionPart,hashtags:hashtagsPart,ts:new Date().toLocaleString('pt-BR')};
       renderCard(art,false);
       setLog(row,'Arte '+i+' — gerada ✓','done');
     }catch(err){
@@ -1440,7 +1552,7 @@ function renderCard(art,fromStorage){
   ov.className='art-overlay';
   ov.innerHTML='<span class="art-zoom">⤢</span>';
   prev.appendChild(ov);
-  var _rc={'4:5':'ratio-4-5','9:16':'ratio-9-16','16:9':'ratio-16-9'}[art.outputFmt];if(_rc)prev.classList.add(_rc);var _cw=art.outputFmt==='16:9'?1200:1080;setTimeout(function(){var pw=prev.offsetWidth;if(pw>0)inner.style.transform='scale('+(pw/_cw)+')';},60);
+  var _ratio=art.outputH&&art.outputW?(art.outputW/art.outputH):1;if(_ratio<0.7)prev.classList.add('ratio-9-16');else if(_ratio<0.9)prev.classList.add('ratio-4-5');var _cw=art.outputW||1080;setTimeout(function(){var pw=prev.offsetWidth;if(pw>0)inner.style.transform='scale('+(pw/_cw)+')';},60);
   card.appendChild(prev);
 
   var body=document.createElement('div');
@@ -1541,7 +1653,7 @@ function updateArtSelect(){
 // ── DOWNLOAD ──────────────────────────────────────────────────────────────────
 async function dlSingle(art){
   toast('Preparando download…');
-  var _dims={'1:1':{w:1080,h:1080},'4:5':{w:1080,h:1350},'9:16':{w:1080,h:1920},'16:9':{w:1200,h:630}}[art.outputFmt||'1:1']||{w:1080,h:1080};
+  var _dims={w:art.outputW||1080, h:art.outputH||1350};
   var container=document.createElement('div');
   container.style.cssText='position:fixed;left:-9999px;top:0;width:'+_dims.w+'px;overflow:hidden;';
   var tmp=document.createElement('div');tmp.innerHTML=art.html;
