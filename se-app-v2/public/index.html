@@ -1536,12 +1536,91 @@ function buildPrompt(tema,pub,det,idx,total){
     split:'Fundo '+BG+' com painel direito 380px background '+P+'. Títulos #FFFFFF. Accent '+P+'.'
   };
   var layoutMap={
-    tipografico:'Tipografia dominante. Título Bebas Neue ENORME (mínimo 90px, idealmente 110-140px para canvas 1080px). Número decorativo no fundo opacity 0.04. Subtítulo Barlow Condensed 28-36px.',
-    diagrama:'Nodes/círculos/setas representando processo ou relação. position:absolute estratégico. Textos dos nodes: mínimo 18px. Título do diagrama: Bebas Neue 72px+.',
-    lista:'Lista numerada 3-5 pontos. Número grande accent (Bebas Neue 80-100px), título bold Barlow Condensed 32-40px, descrição curta 18-22px.',
-    dado:'Estatística central ENORME — Bebas Neue mínimo 160px para o número (ex: 3×, 87%). Contexto acima em 24px. Interpretação abaixo em 22px.',
-    provocativo:'Frase de impacto ocupando 70% do slide. Bebas Neue 100-130px. Contraste extremo. Tipografia É o design. Sem elementos decorativos — só texto grande.',
-    educativo:'Layout didático. Título Bebas Neue 72px+. Etapas numeradas: número accent 60px + texto Barlow 24px. Espaço generoso entre itens.',
+    tipografico:(function(){
+      var W=dim.w,H=dim.h,ps=Math.round(W*0.06);
+      return 'Tipografia pesada estilo anúncio B2B. Use EXATAMENTE este template:\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;padding:'+Math.round(H*0.06)+'px '+ps+'px;box-sizing:border-box;">'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.018)+'px;color:'+P+';font-weight:400;font-style:italic;margin-bottom:'+Math.round(H*0.02)+'px;">— [CATEGORIA OU NICHO]</div>'
+        +'<div style="flex:1;display:flex;align-items:center;">'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.115)+'px;font-weight:800;line-height:1.05;color:#FFFFFF;margin:0;text-transform:none;">'
+        +'[PALAVRA 1]<br>[PALAVRA 2]<br><span style="color:'+P+';">[PALAVRA IMPACTO.]</span></p></div>'
+        +'<div style="display:flex;align-items:center;gap:'+Math.round(W*0.015)+'px;margin-top:'+Math.round(H*0.025)+'px;">'
+        +'<div style="width:3px;height:'+Math.round(H*0.065)+'px;background:'+P+';border-radius:2px;flex-shrink:0;"></div>'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.025)+'px;color:rgba(255,255,255,0.5);line-height:1.5;margin:0;">[FRASE DE SUPORTE: 1-2 linhas contextualizando]</p></div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.014)+'px;color:rgba(255,255,255,0.25);margin-top:'+Math.round(H*0.025)+'px;">'+BN+'</div>'
+        +'</div>';
+    })(),
+    diagrama:'Nodes/círculos/setas representando processo ou relação. position:absolute estratégico. Fonte título: Barlow 800 80px. Textos dos nodes: mínimo 20px.',
+    lista:(function(){
+      var W=dim.w,H=dim.h,ps=Math.round(W*0.06);
+      var cardBg=G.theme==='white'?'rgba(0,0,0,0.05)':'rgba(255,255,255,0.04)';
+      var cardBorder=G.theme==='white'?'rgba(0,0,0,0.1)':'rgba(255,255,255,0.08)';
+      var itemColor=G.theme==='white'?BG:'rgba(255,255,255,0.8)';
+      return 'Lista de itens em cards escuros. Use EXATAMENTE este template:\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;padding:'+Math.round(H*0.06)+'px '+ps+'px;box-sizing:border-box;">'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.018)+'px;color:'+P+';font-weight:400;font-style:italic;margin-bottom:'+Math.round(H*0.015)+'px;">— [CATEGORIA]</div>'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.082)+'px;font-weight:800;line-height:1.1;color:#FFFFFF;margin:0 0 '+Math.round(H*0.015)+'px;text-transform:none;">[HEADLINE FORTE]<br><span style="color:'+P+';">[ÚLTIMA LINHA ACCENT.]</span></p>'
+        +'<div style="display:flex;flex-direction:column;gap:'+Math.round(H*0.012)+'px;flex:1;justify-content:center;">'
+        +'[REPITA 3-4 VEZES: <div style="background:'+cardBg+';border:1px solid '+cardBorder+';border-radius:'+Math.round(W*0.012)+'px;padding:'+Math.round(H*0.022)+'px '+Math.round(W*0.025)+'px;display:flex;align-items:center;gap:'+Math.round(W*0.018)+'px;">'
+        +'<span style="color:#e74c3c;font-size:'+Math.round(W*0.025)+'px;font-weight:700;flex-shrink:0;">✕</span>'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.026)+'px;color:'+itemColor+';font-weight:400;">[ITEM DO PROBLEMA/BENEFÍCIO]</span>'
+        +'</div>]'
+        +'</div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.014)+'px;color:rgba(255,255,255,0.25);margin-top:'+Math.round(H*0.02)+'px;">'+BN+'</div>'
+        +'</div>';
+    })(),
+    dado:(function(){
+      var W=dim.w,H=dim.h,ps=Math.round(W*0.06);
+      return 'Estatística central de alto impacto. Use EXATAMENTE este template:\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0 '+ps+'px;box-sizing:border-box;">'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.022)+'px;color:rgba(255,255,255,0.5);font-weight:400;margin-bottom:'+Math.round(H*0.015)+'px;text-transform:uppercase;letter-spacing:3px;">[CONTEXTO DO DADO — 1 linha]</div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.22)+'px;font-weight:800;line-height:0.9;color:'+P+';margin-bottom:'+Math.round(H*0.015)+'px;">[NÚMERO]</div>'
+        +'<div style="width:'+Math.round(W*0.08)+'px;height:4px;background:'+P+';border-radius:2px;margin-bottom:'+Math.round(H*0.02)+'px;"></div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.038)+'px;font-weight:700;line-height:1.2;color:#FFFFFF;margin-bottom:'+Math.round(H*0.015)+'px;">[O QUE ESSE NÚMERO SIGNIFICA]</div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.024)+'px;color:rgba(255,255,255,0.45);line-height:1.5;">[INTERPRETAÇÃO OU IMPLICAÇÃO]</div>'
+        +'<div style="position:absolute;bottom:'+Math.round(H*0.04)+'px;left:'+ps+'px;font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.014)+'px;color:rgba(255,255,255,0.2);">'+BN+'</div>'
+        +'</div>';
+    })(),
+    provocativo:(function(){
+      var W=dim.w,H=dim.h,ps=Math.round(W*0.065);
+      var mutedC=G.theme==='white'?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.4)';
+      var ctaBg=P; var ctaTxt=BG;
+      return 'Anúncio/post impacto alto — Barlow 800, caixa mista, última linha em accent. Use EXATAMENTE este template:\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;padding:'+Math.round(H*0.055)+'px '+ps+'px '+Math.round(H*0.045)+'px;box-sizing:border-box;">'
+        +'<div style="display:flex;align-items:center;gap:'+Math.round(W*0.012)+'px;margin-bottom:'+Math.round(H*0.03)+'px;">'
+        +'<div style="width:'+Math.round(W*0.038)+'px;height:3px;background:'+P+';border-radius:2px;"></div>'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.018)+'px;font-style:italic;color:'+P+';font-weight:400;">[Categoria ou nicho do conteúdo]</span>'
+        +'</div>'
+        +'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;margin-bottom:'+Math.round(H*0.028)+'px;">'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.105)+'px;font-weight:800;line-height:1.08;color:#FFFFFF;margin:0;text-transform:none;">'
+        +'[HEADLINE LINHA 1<br>LINHA 2 FORTE<br><span style="color:'+P+';">linha accent final.</span>]'
+        +'</p></div>'
+        +'<div style="border-left:3px solid '+P+';padding-left:'+Math.round(W*0.022)+'px;margin-bottom:'+Math.round(H*0.028)+'px;">'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.028)+'px;color:'+mutedC+';line-height:1.5;margin:0;">[Frase suporte: 1-2 linhas completando a ideia do headline]</p>'
+        +'</div>'
+        +'<div style="background:'+ctaBg+';border-radius:'+Math.round(W*0.012)+'px;padding:'+Math.round(H*0.024)+'px;text-align:center;margin-bottom:'+Math.round(H*0.022)+'px;">'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.03)+'px;font-weight:700;color:'+ctaTxt+';">→ [CTA DIRETO E CURTO]</span>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;">'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.016)+'px;font-weight:700;color:#FFFFFF;">'+BN+'</span>'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.014)+'px;color:'+mutedC+';">'+(G.handle||'')+'</span>'
+        +'</div>'
+        +'</div>';
+    })(),
+    educativo:(function(){
+      var W=dim.w,H=dim.h,ps=Math.round(W*0.06);
+      var cardBg=G.theme==='white'?'rgba(0,0,0,0.04)':'rgba(255,255,255,0.04)';
+      return 'Layout educativo passo a passo. Use EXATAMENTE este template:\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;padding:'+Math.round(H*0.055)+'px '+ps+'px;box-sizing:border-box;">'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.018)+'px;color:'+P+';font-style:italic;margin-bottom:'+Math.round(H*0.015)+'px;">— [Categoria]</div>'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.075)+'px;font-weight:800;line-height:1.1;color:#FFFFFF;margin:0 0 '+Math.round(H*0.025)+'px;text-transform:none;">[HEADLINE]<br><span style="color:'+P+';">[destaque accent]</span></p>'
+        +'<div style="display:flex;flex-direction:column;gap:'+Math.round(H*0.014)+'px;flex:1;justify-content:center;">'
+        +'[REPITA 3-5 VEZES: <div style="display:flex;align-items:flex-start;gap:'+Math.round(W*0.022)+'px;background:'+cardBg+';border-radius:'+Math.round(W*0.01)+'px;padding:'+Math.round(H*0.018)+'px '+Math.round(W*0.022)+'px;">'
+        +'<span style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.042)+'px;font-weight:800;color:'+P+';line-height:1;flex-shrink:0;">0N</span>'
+        +'<div><p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.026)+'px;font-weight:700;color:#FFFFFF;margin:0 0 4px;">[TÍTULO DA ETAPA]</p>'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.02)+'px;color:rgba(255,255,255,0.5);margin:0;line-height:1.4;">[Descrição curta]</p></div></div>]'
+        +'</div></div>';
+    })(),
     fotobg:'A IMAGEM ENVIADA é o fundo completo do post. Use <img src="__IMG__" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;"> como primeira tag dentro do slide. Adicione overlay <div style="position:absolute;inset:0;background:rgba(0,0,0,'+(G.overlayOpacity/100).toFixed(2)+');z-index:1;"></div>. Todos os textos ficam acima (z-index>=2). Tipografia grande e bold para contraste máximo.',
     motivacional:(function(){
       var W=dim.w, H=dim.h;
@@ -1570,24 +1649,23 @@ function buildPrompt(tema,pub,det,idx,total){
         +'</div>';
     })()
   };
-  return 'Você é designer especialista em posts para redes sociais B2B.\n\n'
-    +'Gere HTML de um '+fmtMap[G.fmt]+' para a marca '+BN+'.\n\n'
+  return 'Você é designer especialista em posts B2B para redes sociais — estilo anúncio profissional de alto impacto.\n\n'
+    +'Gere HTML para a marca '+BN+'. Canvas: '+dim.w+'x'+dim.h+'px.\n\n'
     +'IDENTIDADE: '+themeMap[G.theme]+'\n'
-    +'Fonte display: Bebas Neue. Corpo: Barlow Condensed / Barlow.\n'
-    +'Barra topo 8px accent ('+P+'). Barra base 4px opacity 0.4.\n'
-    +'"'+BN+'" topo esquerdo. Número topo direito. Rodapé com brand.\n\n'
+    +'Fonte principal: Barlow font-weight:800 (headlines). Secundária: Barlow 400/500 (corpo).\n'
+    +'Cor accent: '+P+'. Fundo: '+BG+'.\n\n'
     +'CONTEÚDO:\nTema: '+tema+'\nPúblico: '+pub+'\nDetalhes: '+(det||'nenhum')+'\n'
     +'Arte '+idx+' de '+total+'. Varie o ângulo.\n\n'
-    +'LAYOUT: '+layoutMap[G.layout]+'\n\n'
-    +'REGRAS:\n1. Cada slide: width:'+dim.w+'px;height:'+dim.h+'px;position:relative;overflow:hidden;\n'
-    +'2. PROIBIDO template literals (backticks). Apenas HTML+CSS.\n'
-    +'3. Zero JavaScript no output.\n'
-    +'4. Fontes Bebas Neue, Barlow Condensed e Barlow já estão carregadas globalmente. NÃO inclua @import, <link> ou <style> de fontes no output. Use-as diretamente via font-family.\n'
-    +'5. Elementos internos position:absolute dentro de cada slide.\n'
-    +'5b. TAMANHO DE FONTE OBRIGATÓRIO: títulos/headlines NUNCA abaixo de 72px. Corpo de texto nunca abaixo de 20px. O canvas é '+dim.w+'x'+dim.h+'px — fontes pequenas ficam ilegíveis. Erre para o lado MAIOR.\n'
-    +'6. Copy direto e provocativo na voz da marca '+BN+'.\n'+(G.handle?'9. Handle: mostrar como pilula semitransparente centralizada no topo do canvas (position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;padding:4px 16px;border-radius:99px;font-size:10px;letter-spacing:2px;text-transform:uppercase;z-index:10;white-space:nowrap;pointer-events:none). Valor: '+G.handle+'.\n':'')+(G.brand?'10. Barra editorial inferior fixa (position:absolute;bottom:0;left:0;right:0;height:44px;background:rgba(0,0,0,.82);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:5): linha vertical accent (display:inline-block;width:3px;height:22px;background:'+P+';border-radius:2px;flex-shrink:0), span flex:1 categoria/tema (font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#999), marca '+BN+' (font-size:10px;font-weight:700;letter-spacing:2px;color:'+P+';text-transform:uppercase).\n':'')
-    +'7. CTA claro no último slide.\n'
-    +'8. Carrossel: envolva slides em <div style="width:1080px;">\n\n'
+    +'LAYOUT SOLICITADO: '+layoutMap[G.layout]+'\n\n'
+    +'REGRAS INVIOLÁVEIS:\n'
+    +'1. Dimensão obrigatória: width:'+dim.w+'px;height:'+dim.h+'px — use display:flex e box-sizing:border-box no container principal.\n'
+    +'2. PROIBIDO: template literals (backticks), JavaScript, @import, <link>, <style>.\n'
+    +'3. Fontes Barlow, Barlow Condensed e Bebas Neue já carregadas globalmente — use diretamente via font-family.\n'
+    +'4. TAMANHO MÍNIMO: headline '+Math.round(dim.w*0.08)+'px+. Corpo '+Math.round(dim.w*0.022)+'px+. NUNCA menor.\n'
+    +'5. text-transform:none nos layouts que usam Barlow (caixa mista normal). Bebas Neue pode ser uppercase.\n'
+    +'6. Copy direto, provocativo, sem floreio — voz da marca '+BN+'.\n'
+    +(G.handle?'7. Handle "'+G.handle+'" como pílula no topo: position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;padding:5px 18px;border-radius:99px;font-size:'+Math.round(dim.w*0.011)+'px;letter-spacing:2px;text-transform:uppercase;z-index:10;white-space:nowrap.\n':'')
+    +'8. Carrossel: envolva todos os slides em <div style="width:'+dim.w+'px;display:flex;flex-direction:column;">\n\n'
     +'FORMATO DE RESPOSTA — siga exatamente:\n'
     +'[HTML completo aqui, sem markdown, sem backticks]\n'
     +'===CAPTION===\n'
