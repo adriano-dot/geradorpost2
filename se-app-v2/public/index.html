@@ -1544,24 +1544,30 @@ function buildPrompt(tema,pub,det,idx,total){
     educativo:'Layout didático. Título Bebas Neue 72px+. Etapas numeradas: número accent 60px + texto Barlow 24px. Espaço generoso entre itens.',
     fotobg:'A IMAGEM ENVIADA é o fundo completo do post. Use <img src="__IMG__" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;"> como primeira tag dentro do slide. Adicione overlay <div style="position:absolute;inset:0;background:rgba(0,0,0,'+(G.overlayOpacity/100).toFixed(2)+');z-index:1;"></div>. Todos os textos ficam acima (z-index>=2). Tipografia grande e bold para contraste máximo.',
     motivacional:(function(){
+      var W=dim.w, H=dim.h;
       var textColor=G.theme==='white'?BG:'#FFFFFF';
-      var mutedColor=G.theme==='white'?'#888':'rgba(255,255,255,0.35)';
-      return 'Layout CITAÇÃO de alto impacto — siga EXATAMENTE esta estrutura:\n\n'
-        +'FUNDO: background:'+BG+' (cor sólida, sem gradiente excessivo). Opcional: overlay retangular sutil no canto inferior direito <div style="position:absolute;bottom:0;right:0;width:220px;height:220px;background:'+P+';opacity:0.06;border-radius:0;z-index:0;"></div>\n\n'
-        +'ASPAS TIPOGRÁFICAS: caractere \u201c (abrir aspas) — <div style="position:absolute;top:32px;left:36px;font-family:Georgia,serif;font-size:150px;font-weight:700;color:'+P+';line-height:1;z-index:1;user-select:none;">\u201c</div>\n\n'
-        +'TEXTO DA CITAÇÃO: position:absolute; top:50%; transform:translateY(-50%); left:44px; right:44px; z-index:2;\n'
-        +'  - font-family: \'Barlow\', sans-serif (NÃO use Bebas Neue nem Barlow Condensed aqui)\n'
-        +'  - text-transform: none (NUNCA coloque em maiúsculas — preserve caixa mista normal)\n'
-        +'  - font-size: 82px (para canvas 1080px). Reduza apenas se o texto tiver mais de 10 palavras.\n'
-        +'  - line-height: 1.18\n'
-        +'  - color: '+textColor+'\n'
-        +'  - MISTURA DE PESOS: palavras de ligação (te, que, as, mais, o, a, um) em font-weight:300; palavras-chave (substantivos, verbos de impacto, adjetivos) em font-weight:700\n\n'
-        +'HIGHLIGHT ESTILO MARCADOR (1-2 palavras-chave apenas): <span style="color:'+P+';font-weight:700;border-bottom:6px solid '+P+';padding-bottom:2px;"> — estilo underline/marcador, NÃO use background box sólido\n\n'
-        +'RODAPÉ: position:absolute; bottom:52px; left:0; right:0; text-align:center; z-index:2;\n'
-        +'  - "LEIA NA LEGENDA" em font-size:11px; letter-spacing:4px; text-transform:uppercase; color:'+mutedColor+'; margin-bottom:10px\n'
-        +'  - handle/brand em font-size:14px; font-weight:600; color:'+mutedColor+'\n\n'
-        +'LINHA SEPARADORA: <div style="position:absolute;bottom:130px;left:44px;width:48px;height:3px;background:'+P+';border-radius:2px;z-index:2;"></div>\n\n'
-        +'PROIBIDO neste layout: barra laranja no topo, barra editorial no rodapé, text-transform:uppercase no texto principal. O design É a tipografia.';
+      var mutedColor=G.theme==='white'?'rgba(0,0,0,0.35)':'rgba(255,255,255,0.32)';
+      var qSize=Math.round(W*0.19);      // ~205px em 1080
+      var fSize=Math.round(W*0.083);     // ~90px em 1080
+      var padSide=Math.round(W*0.06);    // ~65px em 1080
+      var padTop=Math.round(H*0.08);     // ~108px — espaço acima do texto
+      var padBot=Math.round(H*0.18);     // ~243px — espaço abaixo do texto (footer)
+      var underSz=Math.round(W*0.006);   // ~6px espessura do underline
+      var handle=(G.handle?G.handle:BN);
+      return 'Use EXATAMENTE este template HTML — substitua apenas o conteúdo de texto, não altere nenhum valor de CSS:\n\n'
+        +'<div style="width:'+W+'px;height:'+H+'px;background:'+BG+';position:relative;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;">'
+        +'<div style="position:absolute;top:'+Math.round(H*0.03)+'px;left:'+Math.round(W*0.05)+'px;font-family:Georgia,serif;font-size:'+qSize+'px;font-weight:700;color:'+P+';line-height:0.75;z-index:1;pointer-events:none;user-select:none;">\u201c</div>'
+        +'<div style="position:absolute;bottom:0;right:0;width:'+Math.round(W*0.22)+'px;height:'+Math.round(W*0.22)+'px;background:'+P+';opacity:0.05;z-index:0;"></div>'
+        +'<div style="flex:1;display:flex;align-items:center;padding:'+padTop+'px '+padSide+'px '+padBot+'px;position:relative;z-index:2;">'
+        +'<p style="font-family:\'Barlow\',sans-serif;font-size:'+fSize+'px;line-height:1.2;color:'+textColor+';margin:0;font-weight:300;text-transform:none;word-break:break-word;">'
+        +'[SUBSTITUA AQUI: escreva a frase motivacional em caixa mista normal. Palavras de ligação (te, que, as, o, a, um, de) em font-weight:300. Palavras-chave em <strong style="font-weight:700;">texto</strong>. Apenas 1 palavra em destaque accent: <span style="font-weight:700;color:'+P+';border-bottom:'+underSz+'px solid '+P+';padding-bottom:'+Math.round(underSz*0.5)+'px;">palavra</span>. Máximo 12 palavras no total.]'
+        +'</p></div>'
+        +'<div style="position:absolute;bottom:'+Math.round(H*0.065)+'px;left:0;right:0;text-align:center;z-index:2;">'
+        +'<div style="width:'+Math.round(W*0.046)+'px;height:3px;background:'+P+';border-radius:2px;margin:0 auto '+Math.round(H*0.018)+'px;"></div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.011)+'px;letter-spacing:'+Math.round(W*0.004)+'px;text-transform:uppercase;color:'+mutedColor+';margin-bottom:'+Math.round(H*0.01)+'px;">LEIA NA LEGENDA</div>'
+        +'<div style="font-family:\'Barlow\',sans-serif;font-size:'+Math.round(W*0.015)+'px;font-weight:500;color:'+mutedColor+';">'+handle+'</div>'
+        +'</div>'
+        +'</div>';
     })()
   };
   return 'Você é designer especialista em posts para redes sociais B2B.\n\n'
